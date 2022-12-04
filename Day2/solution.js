@@ -68,9 +68,6 @@ const calculate = (data) => {
     x = totalPointsFirstChallenge.reduce((a,b) => a + b);
     y = totalPointsSecondChallenge.reduce((a,b) => a + b);
 
-    console.log(x);
-    console.log(y);
-
     return { x, y }
 }
 
@@ -78,8 +75,9 @@ const calculate = (data) => {
 fs.readFile("input.txt", "utf-8", (err, data) => {
     if (err) throw err;
 
-    const { totalPoints1, totalPoints2 } = calculate(data);
-    console.log(`The total score for the 1st challenge is ${totalPoints1} `);
-    console.log(`The total score for the 2nd challenge is ${totalPoints2} `);
+    const { x, y } = calculate(data);
+
+    console.log(`The total score for the 1st challenge is ${x} `);
+    console.log(`The total score for the 2nd challenge is ${y} `);
 
 });
