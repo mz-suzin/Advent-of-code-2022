@@ -6,29 +6,28 @@ const calculate = (data) => {
     const totalArrayPriorities = data.split('\n').map((rucksack) => {
         rucksack = rucksack.replace('\r', '');
 
-        //split string in half
-        let halfString = Math.floor(rucksack.length/2);
+        //split string in half - string is always even
+        let halfString = rucksack.length/2;
         ruck1 = rucksack.slice(0, halfString);
-        ruck2 = rucksack.slice(halfString+1, rucksack.length);
+        ruck2 = rucksack.slice(halfString, rucksack.length);
 
         //comparing each character of ruck1 to all others at ruck2, checking if character has already been spotted as repeated,
         // if not, saving it with the ascii value of the repeated character
-        let repeatedAscii = [];
-        [...ruck1].forEach((letter) => {
-            if (ruck2.includes(letter)) { 
-                repeatedAscii.push(letter.charCodeAt(0));
+        let repeatedAscii = 0;
+        let checkedChar = [];
+        [...ruck1].forEach((character) => {
+            if (ruck2.includes(character) && !checkedChar.includes(character)) { 
+                checkedChar.push(character);
+                repeatedAscii = character.charCodeAt(0);
             }
         })
 
         // convert to priorities from advent of code
         let priorities = 0;
-        if (repeatedAscii.length > 0) {
-            for (let i = 0; i < repeatedAscii.length; i++) {
-                repeatedAscii[i] = repeatedAscii[i]-38;
-                    if (repeatedAscii[i] >= 59)
-                        repeatedAscii[i] -= 58;
-            }
-            priorities = repeatedAscii.reduce((a,b) => a+b);
+        if (repeatedAscii !== 0) {
+            priorities = repeatedAscii - 38;
+            if (priorities >= 59)
+                priorities -= 58;            
         }
         
         
@@ -38,7 +37,6 @@ const calculate = (data) => {
     totalPriorities = totalArrayPriorities.reduce((a,b) => a+b);
 
     return totalPriorities;
-
 }
 
 
