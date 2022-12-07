@@ -18,8 +18,6 @@ const solution = (data) => {
         [firstSection, lastSection] = getSections(firstElf);
         [firstSection2, lastSection2] = getSections(secondElf);
 
-        // console.log(firstSection, lastSection, firstSection2, lastSection2);
-
         //fully overlaping sections:
         if ((firstSection >= firstSection2 && lastSection <= lastSection2) || (firstSection <= firstSection2 && lastSection >= lastSection2)){
             fullyOverlaping++;
@@ -27,7 +25,6 @@ const solution = (data) => {
 
         //partial overlaping sections:
         if (firstSection <= lastSection2 && lastSection >= firstSection2){
-            // console.log(firstSection, lastSection, firstSection2, lastSection2);
             partialOverlaping++;
         }
 
@@ -37,5 +34,3 @@ const solution = (data) => {
 }
 
 solution(data);
-
-// console.log(indexOf)
