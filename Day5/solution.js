@@ -66,7 +66,6 @@ const solution = (data) => {
     stacks = getStacksPosition(data);
     let stacks9001 = JSON.parse(JSON.stringify(stacks));
 
-
     instructions = getCraneInstructions(data);
 
     for (let i = 0; i <= instructions.length - 1; i++){
@@ -75,28 +74,17 @@ const solution = (data) => {
         let toStack = instructions[i][2];
         let toAdd = '';
 
+        //calculations for CraneMover 9000
         for (let j = 0; j <= quantity - 1; j++) {
             toAdd = stacks[fromStack].pop();
             stacks[toStack].push(toAdd);
-
-            // consoling
-            // console.log('quantity', quantity);
-            // console.log('from stack', stacks[fromStack]);
-            // console.log('to Stack', stacks[toStack]);
         }
+
+        //Calculations for CraneMover 9001
         toAdd = '';
-
-        // console.log('quantity', quantity);
-        // console.log('from stack', fromStack, stacks9001[fromStack]);
-
         toAdd = stacks9001[fromStack].slice(-quantity);
-        // console.log('to Add', toAdd);
-
         stacks9001[fromStack].splice(stacks9001[fromStack].length - quantity, quantity);
-        // console.log('from stack', fromStack, stacks9001[fromStack]);
-
         stacks9001[toStack] = stacks9001[toStack].concat(toAdd);
-        // console.log('to Stack', toStack, stacks9001[toStack]);
     }
 
     topCrates = getTopCrates(stacks);
