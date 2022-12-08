@@ -60,9 +60,12 @@ const getTopCrates = (stacks) => {
 
 const solution = (data) => {
     let topCrates = '';
+    let topCrates9001 = '';
 
     //stacks[0] = empty item ---- stacks[1-9] = crate position
     stacks = getStacksPosition(data);
+    let stacks9001 = JSON.parse(JSON.stringify(stacks));
+
 
     instructions = getCraneInstructions(data);
 
@@ -81,10 +84,25 @@ const solution = (data) => {
             // console.log('from stack', stacks[fromStack]);
             // console.log('to Stack', stacks[toStack]);
         }
+        toAdd = '';
+
+        // console.log('quantity', quantity);
+        // console.log('from stack', fromStack, stacks9001[fromStack]);
+
+        toAdd = stacks9001[fromStack].slice(-quantity);
+        // console.log('to Add', toAdd);
+
+        stacks9001[fromStack].splice(stacks9001[fromStack].length - quantity, quantity);
+        // console.log('from stack', fromStack, stacks9001[fromStack]);
+
+        stacks9001[toStack] = stacks9001[toStack].concat(toAdd);
+        // console.log('to Stack', toStack, stacks9001[toStack]);
     }
 
     topCrates = getTopCrates(stacks);
-    console.log(`the top crates, after moving them, are: ${topCrates}`);
+    console.log(`the top crates using CraneMover 9000, after moving them, are: ${topCrates}`);
+    topCrates9001 = getTopCrates(stacks9001);
+    console.log(`the top crates using CraneMover 9001, after moving them, are: ${topCrates9001}`);
 
 }
 
