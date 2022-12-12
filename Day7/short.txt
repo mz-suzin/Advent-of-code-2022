@@ -1,0 +1,13 @@
+$ cd /
+$ ls
+53302 chvtw.czb
+240038 dwhl.nrn
+124868 dwhl.vvb
+dir fml
+dir jbgpgvj
+dir qjphltd
+dir wlfprc
+dir zqvh
+dir zzmgz
+$ cd fml
+$ ls
