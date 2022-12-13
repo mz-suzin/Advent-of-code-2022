@@ -1,57 +1,79 @@
-//coded by mz-suzin
+//coded by mz-suzin - with regards to https://github.com/sansk
 const fs = require('fs');
 
-//dir constructor
-class newDir {
-    constructor(dirName, currDir) {
-        this.name = dirName;
-        this.parent = currDir;
-        this.size = 0;
-    }
+const getCmdType = (line) => {
+    if (line.startsWith('$')) return 'shell-command';
+    if (line.startsWith('dir')) return 'directory';
+    return 'file';
 }
 
-const readCmd = (cmd, currDir) => {
-    if (cmd.includes('cd')) {
-        dirName = cmd.replace('$ cd ', '');
-        dirName = new newDir(dirName, currDir);
-        console.log(dirName.name)
-    }
-}
+const calculate = () => {
+    let currDir = ['root'];
+    const directory = new Map();
 
-const addFile = (cmd) => {
+    for (const line of data) {
+        if (getCmdType(line) === 'shell-command') {
+            const [aux, cmd, arg] = line.split(' ');
 
-}
+            if (cmd === 'cd') {
+                if (arg === '/')
+                    currDir.splice(1);
+                else if (arg === '..')
+                    currDir.pop();
+                else 
+                    currDir.push(arg);
+            }
+        }
+        if (getCmdType(line) === 'file') {
+            const [size] = line.split(' ');
+            const key = currDir.join('/');
 
-const solution = (data) => {
-    //should I build the tree before and calculte the sum afterwards?
-    //Or calculate on the fly
-    //I'm leaning towards the later.
-    //have to always save the previous command
-    //Each directory can be an array containing [name of dir, size of dir]. 
-    //Have to keep track of which array is inside which
-    //One important step is to create an updater routine on the directory array every time 'cd ..' is called.
-    //At the end, just sum up all the sizes higher than 100000.
+            //this line stores the sum of the sizes of each file inside the directory
+            directory.set(key, (directory.get(key) || 0) + Number(size));
 
+            //because we need the total size of the directory (including files from directories inside directories), we need to update every directory below the one we are.
+            if (currDir.length > 1) {
+                for (let i = currDir.length - 1; i > 0; i--){
+                    const mainKey = currDir.slice(0,i).join('/');
 
-    let currDir = 'asd';
-    let prevCmd = '';
-
-
-    data.forEach(cmd => {
-        if (cmd.includes('$')) {
-            readCmd(cmd, currDir);
-            
-        } else {
-            addFile(cmd);
+                    directory.set(mainKey, (directory.get(mainKey) || 0) + Number(size));
+                }
+            }
         }
 
-
-
-        //leave this last
-        prevCmd = cmd;
-    });
+    }
+    return directory;
 }
 
-const data = fs.readFileSync('short.txt', 'utf-8').toString().split('\r\n');
+const part1 = () => {
+    const MAX_DIR_SIZE = 100000;
+    const dirSize = calculate();
+    let totalSize = 0;
 
-solution(data);
+    for (const size of dirSize.values()){
+        if (size <= MAX_DIR_SIZE) totalSize += size;
+    }
+
+    console.log('Part 1: ');
+    console.log('The total size of directories to be deleted is: ', totalSize);
+}
+
+const part2 = () => {
+    REQUIRED_SPACE = 30000000;
+    TOTAL_SPACE = 70000000;
+    const dirSize = calculate();
+    let totalSpaceNeeded = REQUIRED_SPACE - (TOTAL_SPACE - dirSize.get('root'))
+    let smallestDir = dirSize.get('root');
+
+    for (const size of dirSize.values()) {
+        if (size >= totalSpaceNeeded && size < smallestDir) smallestDir = size;
+    }
+
+    console.log('Part 2: ')
+    console.log('The smallest directory size that can be deleted to free up enough space is: ', smallestDir);
+}
+
+const data = fs.readFileSync('input.txt', 'utf-8').toString().trim().split('\r\n');
+
+part1();
+part2();
